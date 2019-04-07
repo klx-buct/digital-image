@@ -7,19 +7,127 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="css/index.css">
     <script src="js/index.js"></script>
+    <script src="js/canvas.js"></script>
     <title>Document</title>
 </head>
-<body>
-    <div id="operation">
-        操纵台
-        <a href="" download="" id="download">下载图片</a>
-        <input type="file" accept="image/*" id="file">
+<body style="background-color: #f5f6f7">
+    <div id="main">
+        <div id="canvas">
+            <canvas id="Canvas1" width="500" height="300">
+
+            </canvas>
+            <canvas id="Canvas2" width="500" height="300">
+
+            </canvas>
+        </div>
+        <div id="operation">
+            <span style="font-weight: bold;display: block">操纵台</span>
+            <a href="" download="" id="download" style="display: block;">下载图片</a>
+            <button type="button" style="display: block" onclick="canvas.sharpen()">锐化</button>
+            <button type="button" style="display: block" onclick="canvas.gray()">灰度图</button>
+            <button type="button" style="display: block" onclick="canvas.restore()">还原</button>
+            <button type="button" style="display: block" onclick="canvas.save()">保存</button>
+            <button type="button" style="display: block" onclick="canvas.gauss(1.5)">高斯模糊</button>
+            <button type="button" style="display: block" onclick="canvas.bilateralFilter(5)">双边滤波</button>
+            <button type="button" style="display: block" onclick="canvas.filter([-1, 0, 1, -2, 0, 2, -1, 0, 1], 8)">Sobel边缘检测</button>
+            <input type="file" accept="image/*" id="file" style="display: block">
+            调节对比度
+            <div id="contrastParent">
+                <div class="sliding" id="contrast">
+
+                </div>
+                <div class="line">
+
+                </div>
+                <span id="contrastVal" style="display: block;position:relative;left: 110px;top:-4px;">1</span>
+            </div>
+            调节亮度
+            <div id="brightnessParent">
+                <div class="sliding" id="brightness">
+
+                </div>
+                <div class="line">
+
+                </div>
+                <span id="brightnessVal" style="display: block;position:relative;left: 110px;top:-4px;">1</span>
+            </div>
+            <!--调节亮度-->
+            <!--<div>-->
+                <!--<div id="brightness" class="sliding">-->
+
+                <!--</div>-->
+                <!--<div class="line">-->
+
+                <!--</div>-->
+                <!--<span id="brightnessVal" style="display: block;position:relative;left: 110px;top:-4px;">0%</span>-->
+            <!--</div>-->
+        </div>
     </div>
-    <canvas id="Canvas1" width="500" height="300">
-
-    </canvas>
-    <canvas id="Canvas2" width="500" height="300">
-
-    </canvas>
+    <script>
+        var canvas = new Canvas(document.querySelector('#Canvas1'), document.querySelector('#Canvas2'));
+        canvas.setCanvas();
+        // var sliding = (function () {
+        //     var drage = false;
+        //     var lastClientX=0;
+        //     var timer;
+        //     return function (name) {
+        //         var val1=0;
+        //         var id = "#"+name;
+        //         var s = document.querySelector(id);
+        //         var parent = document.querySelector(id+"Parent");
+        //         // s.style.left = s.getBoundingClientRect().left + val1 + "px";
+        //         s.onmousedown = function (e) {
+        //             drage = true;
+        //             lastClientX = e.clientX;
+        //         }
+        //         parent.onmousemove = function (e) {
+        //             if(drage) {
+        //                 // console.log(val)
+        //                 let nowClientX = event.clientX;
+        //
+        //                 let offsetX = nowClientX - lastClientX;
+        //                 val1 += offsetX;
+        //                 if(val1 <= 100 && val1 >= 0){
+        //                     s.style.left = s.getBoundingClientRect().left + offsetX + "px";
+        //                     document.querySelector(id+"Val").innerHTML = val1*4/100;
+        //                     clearTimeout(timer);
+        //                     timer = setTimeout(function () {
+        //                         canvas.contrast(contrast*4/100, brightness*2/100);
+        //                     }, 500);
+        //                 }
+        //                 else{
+        //                     val1 -= offsetX;
+        //                     drage=false;
+        //                 }
+        //                 lastClientX = event.clientX;
+        //             }
+        //         }
+        //
+        //         parent.onmouseup = function () {
+        //             drage = false;
+        //         }
+        //     }
+        // })();
+        var sliding1 = new sliding(function (val) {
+            return val*4/100;
+        }, 25)
+        var sliding2 = new sliding(function (val) {
+            return val*2/100;
+        }, 50)
+        sliding1.init("contrast", function () {
+            clearTimeout(sliding1.getTimer());
+            var t = setTimeout(function () {
+                canvas.contrast(sliding1.getVal()*4/100, sliding2.getVal()*2/100);
+            }, 500);
+            sliding1.setTimer(t);
+        })
+        sliding2.init("brightness", function () {
+            clearTimeout(sliding2.getTimer());
+            var t = setTimeout(function () {
+                canvas.contrast(sliding1.getVal()*4/100, sliding2.getVal()*2/100);
+            }, 500);
+            sliding2.setTimer(t);
+        })
+    </script>
 </body>
 </html>

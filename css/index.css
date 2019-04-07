@@ -1,18 +1,37 @@
 #Canvas1{
     display: block;
-    margin:0 auto;
     border:1px solid #d3d3d3;
 }
 
 #Canvas2{
     display: block;
-    margin:0 auto;
     border:1px solid #d3d3d3;
 }
-
-#operation{
-    height: 200px;
+#canvas {
     width: 100%;
-    border:1px solid #d3d3d3;
-    margin-bottom: 30px;
+    float: left;
+}
+#operation{
+    width: 400px;
+    float: left;
+    margin-left: -402px;
+    /*border:1px solid #d3d3d3;*/
+}
+
+.sliding {
+    position: absolute;
+    cursor: pointer;
+    width: 10px;
+    height: 20px;
+    background-color: #d3d3d3;
+    border-radius: 10px;
+}
+.line{
+    display: block;
+    position: relative;
+    top:8px;
+    height: 5px;
+    width: 100px;
+    background-color: #c6a671;
+    z-index: -1;
 }
