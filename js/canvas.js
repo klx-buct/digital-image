@@ -108,6 +108,28 @@ class Canvas{
         this.setDownload(this.c2, "klx");
     }
 
+    averageFilter() {
+        var imgData = this.ctx2.getImageData(10, 10, this.img.width, this.img.height);
+        var init = this.ctx2.getImageData(10, 10, this.img.width, this.img.height).data;
+        var data = imgData.data, h = imgData.height, w = imgData.width;
+        var count=0;
+        for (var y = 1; y < h-1; y += 1) {
+            for (var x = 1; x < w-1; x += 1) {
+                for (var c = 0; c < 3; c += 1) {
+                    var i = (y*w + x)*4 + c;
+                    data[i] = (init[i-w*4-4] + init[i-w*4] + init[i-w*4+4]
+                        + init[i-4]     + init[i]     + init[i+4]
+                        + init[i+w*4-4] + init[i+w*4] + init[i+w*4+4])/9;
+                }
+            }
+        }
+        this.ctx2.clearRect(0, 0, this.c2.width, this.c2.height);
+        this.ctx2.putImageData(imgData,10,10);
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.putImageData(imgData, 10, 10)
+        this.setDownload(this.c2, "klx");
+    }
+
     filter(m, divisor){// 滤波
         var imgData = this.ctx2.getImageData(10, 10, this.img.width, this.img.height);
         var init = this.ctx2.getImageData(10, 10, this.img.width, this.img.height).data;
